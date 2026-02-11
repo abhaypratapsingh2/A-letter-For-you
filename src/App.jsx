@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 
@@ -88,6 +88,8 @@ const App = () => {
       color: #e6dcca;
       font-family: 'Playfair Display', serif;
       overflow: hidden;
+      height: 100%;
+      width: 100%;
     }
 
     /* Subtle Texture Overlay */
@@ -107,16 +109,25 @@ const App = () => {
     .paper-shadow {
       box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;
     }
+
+    /* iOS Safe Area Utilities */
+    .safe-pb {
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+    }
+    .safe-px {
+      padding-left: env(safe-area-inset-left, 16px);
+      padding-right: env(safe-area-inset-right, 16px);
+    }
   `;
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center">
       <style>{styles}</style>
 
       <div className="texture-overlay" />
       <EmberBackground />
 
-      <div className="relative z-10 w-full max-w-5xl p-6 flex flex-col items-center justify-center min-h-screen">
+      <div className="relative z-10 w-full max-w-5xl h-full flex flex-col items-center justify-center">
         <AnimatePresence mode="wait">
           {!hasStarted ? (
             <OpeningPage key="opening" onStart={() => setHasStarted(true)} />
@@ -143,15 +154,15 @@ const OpeningPage = ({ onStart }) => {
       animate={{ opacity: 1 }} 
       exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
       transition={{ duration: 1 }}
-      className="text-center flex flex-col items-center justify-center"
+      className="text-center flex flex-col items-center justify-center w-full h-full safe-px safe-pb"
     >
-      <div className="w-[1px] h-16 bg-[#ffbf80] mb-8 opacity-40"></div>
+      <div className="w-[1px] h-12 md:h-16 bg-[#ffbf80] mb-6 md:mb-8 opacity-40"></div>
       
       <motion.h1 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 1 }}
-        className="text-5xl md:text-7xl font-normal text-[#f2ebe0] mb-6 leading-tight"
+        className="text-4xl sm:text-5xl md:text-7xl font-normal text-[#f2ebe0] mb-4 md:mb-6 leading-tight"
       >
         Words I've Been <br />
         <span className="italic text-[#d6c4b0] opacity-80">Holding Back</span>
@@ -164,7 +175,7 @@ const OpeningPage = ({ onStart }) => {
       >
         <button
           onClick={onStart}
-          className="group relative px-12 py-5 bg-[#f2ebe0] text-[#2c1810] font-serif text-xl rounded-sm shadow-xl hover:bg-[#fff] transition-all duration-500 paper-shadow"
+          className="group relative px-8 py-4 md:px-12 md:py-5 bg-[#f2ebe0] text-[#2c1810] font-serif text-lg md:text-xl rounded-sm shadow-xl hover:bg-[#fff] transition-all duration-500 paper-shadow mt-4"
         >
           <span className="flex items-center gap-3">
              <Mail size={20} className="text-[#8b0000]" /> Open Letter
@@ -176,7 +187,6 @@ const OpeningPage = ({ onStart }) => {
 };
 
 const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
-  // Logic check: isLast is only true when we are on the hidden trigger segment
   const isLast = currentSegment === segments.length - 1;
 
   const handleNext = () => {
@@ -192,9 +202,9 @@ const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
   };
 
   return (
-    <div className="w-full flex items-center justify-center gap-4 md:gap-8">
+    <div className="w-full h-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 safe-px safe-pb">
       
-      {/* Previous Button */}
+      {/* Previous Button (Desktop) */}
       <motion.button
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: currentSegment > 0 ? 1 : 0, x: 0, pointerEvents: currentSegment > 0 ? 'auto' : 'none' }}
@@ -205,10 +215,10 @@ const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
       </motion.button>
 
       {/* Main Letter Area */}
-      <div className="relative w-full max-w-2xl min-h-[400px] flex flex-col items-center">
+      <div className="relative w-full max-w-xl md:max-w-2xl flex flex-col items-center">
         
         {/* Progress Dots */}
-        <div className="flex gap-2 mb-8">
+        <div className="flex gap-2 mb-6 md:mb-8">
           {segments.map((_, idx) => (
             <motion.div
               key={idx}
@@ -217,7 +227,7 @@ const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
                 opacity: idx === currentSegment ? 1 : 0.3,
                 backgroundColor: idx === currentSegment ? "#ffbf80" : "#ab9898"
               }}
-              className="w-2 h-2 rounded-full transition-all duration-300"
+              className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300"
             />
           ))}
         </div>
@@ -231,18 +241,19 @@ const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
         </AnimatePresence>
 
         {/* Mobile Navigation / Tap Area */}
-        <div className="mt-8 flex gap-4 items-center justify-center w-full md:hidden">
+        <div className="mt-8 flex gap-4 items-center justify-center w-full md:hidden z-20">
              <button 
                 onClick={handlePrev} 
                 disabled={currentSegment === 0}
-                className={`p-2 border border-[#ffbf80]/30 rounded-full text-[#ffbf80] ${currentSegment === 0 ? 'opacity-0' : 'opacity-100'}`}
+                className={`p-4 border border-[#ffbf80]/30 rounded-full text-[#ffbf80] active:bg-[#ffbf80]/10 transition-opacity ${currentSegment === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                aria-label="Previous Page"
              >
                 <ChevronLeft size={24} />
              </button>
              <button 
                 onClick={handleNext}
                 disabled={isLast}
-                className={`px-6 py-2 bg-[#ffbf80]/10 border border-[#ffbf80]/30 rounded-full text-[#ffbf80] font-sans text-sm tracking-widest uppercase ${isLast ? 'opacity-0' : 'opacity-100'}`}
+                className={`px-8 py-4 bg-[#ffbf80]/10 border border-[#ffbf80]/30 rounded-full text-[#ffbf80] font-sans text-sm tracking-widest uppercase active:bg-[#ffbf80]/20 transition-opacity ${isLast ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
              >
                 Tap to Continue
              </button>
@@ -260,7 +271,7 @@ const LetterReader = ({ currentSegment, setCurrentSegment, segments }) => {
 
       </div>
 
-      {/* Next Button */}
+      {/* Next Button (Desktop) */}
       <motion.button
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: !isLast ? 1 : 0, x: 0, pointerEvents: !isLast ? 'auto' : 'none' }}
@@ -311,7 +322,7 @@ const PaperLetter = ({ data, isLast }) => {
         {/* Fold Line (Visual Detail) */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-black/10 z-10" />
         
-        <div className="relative z-20 p-8 md:p-12 flex flex-col items-center justify-center min-h-[300px] text-center">
+        <div className="relative z-20 p-6 md:p-12 flex flex-col items-center justify-center min-h-[40vh] md:min-h-[300px] text-center">
             
             {/* Typewriter/Ink Effect for Text */}
             {isLast ? (
@@ -326,12 +337,12 @@ const PaperLetter = ({ data, isLast }) => {
 };
 
 const TextContent = ({ data }) => {
-    let styleClass = "text-[#2c1810] text-xl md:text-3xl font-normal";
+    let styleClass = "text-[#2c1810] text-xl sm:text-2xl md:text-3xl font-normal";
     
     if (data.type === 'opening') {
-        styleClass = "text-[#8b0000] text-3xl md:text-4xl italic font-serif leading-tight";
+        styleClass = "text-[#8b0000] text-2xl sm:text-3xl md:text-4xl italic font-serif leading-tight";
     } else if (data.type === 'emphasis') {
-        styleClass = "text-[#2c1810] text-2xl md:text-4xl font-semibold tracking-wide font-serif";
+        styleClass = "text-[#2c1810] text-2xl sm:text-3xl md:text-4xl font-semibold tracking-wide font-serif";
     }
 
     return (
@@ -353,7 +364,7 @@ const ClosingContent = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="text-6xl md:text-8xl mb-6"
+                className="text-6xl md:text-8xl mb-6 md:mb-8"
             >
                 💌
             </motion.div>
@@ -362,7 +373,7 @@ const ClosingContent = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-[#2c1810] text-2xl md:text-3xl font-serif italic mb-8"
+                className="text-[#2c1810] text-2xl md:text-3xl font-serif italic mb-6 md:mb-8"
             >
                 That's everything I needed to say.
             </motion.p>
@@ -371,7 +382,7 @@ const ClosingContent = () => {
                 initial={{ width: 0 }}
                 animate={{ width: "60px" }}
                 transition={{ delay: 1, duration: 1 }}
-                className="h-[2px] bg-[#8b0000] mb-8"
+                className="h-[2px] bg-[#8b0000] mb-6 md:mb-8"
             />
             
             <motion.p
