@@ -29,7 +29,7 @@ const letterSegments = [
     type: 'regular'
   },
   {
-    text: "I doubt myself a lot. I always think there are people better than me — more confident, more certain. That’s probably why I stayed quiet for so long. Even now, I’m not asking for anything. I just didn’t want silence to say something that wasn’t true.",
+    text: "I doubt myself a lot. I always think there are people better than me, more confident, more certain. That’s probably why I stayed quiet for so long. Even now, I’m not asking for anything. I just didn’t want silence to say something that wasn’t true.",
     type: 'regular'
   },
   {
@@ -41,7 +41,7 @@ const letterSegments = [
     type: 'regular'
   },
   {
-    text: "This wasn’t sudden or confusing. I gave myself time. I questioned it. I tried to step away from it. But it stayed — quietly — and that told me it mattered.",
+    text: "This wasn’t sudden or confusing. I gave myself time. I questioned it. I tried to step away from it. But it stayed  ``quietly`` and that told me it mattered.",
     type: 'regular'
   },
   {
