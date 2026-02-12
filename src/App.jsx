@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 // --- Content ---
 const letterSegments = [
   {
-    text: "I’m not writing this with a plan. I just want to say it the way it feels.",
+    text: "Hello Jyoti, I’m not writing this with a plan. I just want to say it the way it feels.",
     type: 'opening'
   },
   {
@@ -33,7 +33,7 @@ const letterSegments = [
     type: 'regular'
   },
   {
-    text: "So here it is: at some point, without trying to, I started caring about you more than I expected.",
+    text: "So here it is: at some point, without trying to, I started caring about you jyoti more than I expected.",
     type: 'emphasis'
   },
   {
